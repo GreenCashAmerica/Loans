@@ -4,70 +4,92 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Loan Application Form</title>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-    <script type="text/javascript">
-        (function(){
-            // Initialize EmailJS with your public key
-            emailjs.init("0ockMZ07aVnggqzsD");  // Replace with your actual public key
-        })();
-    </script>
+    <style>
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+        h2 {
+            text-align: center;
+            color: #004d26;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #004d26;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #003d1f;
+        }
+    </style>
 </head>
 <body>
-    <form id="loan-form">
-        <input type="text" id="name" name="name" placeholder="Your Full Name" required />
-        <input type="email" id="email" name="email" placeholder="Your Email Address" required />
-        <input type="text" id="phone" name="phone" placeholder="Your Phone Number" required />
-        <input type="text" id="id_number" name="id_number" placeholder="Your ID Number" required />
-        <select id="loan_type" name="loan_type" required>
-            <option value="">Select Loan Type</option>
-            <option value="Personal">Personal Loan</option>
-            <option value="Business">Business Loan</option>
-            <option value="Mortgage">Mortgage</option>
-        </select>
-        <input type="number" id="loan_amount" name="loan_amount" placeholder="Loan Amount Requested" required />
-        <input type="text" id="loan_term" name="loan_term" placeholder="Loan Term (e.g., 5 years)" />
-        <textarea id="loan_purpose" name="loan_purpose" placeholder="Purpose of Loan (Optional)"></textarea>
-        <select id="employment_status" name="employment_status">
-            <option value="">Employment Status (Optional)</option>
-            <option value="Employed">Employed</option>
-            <option value="Self-Employed">Self-Employed</option>
-            <option value="Unemployed">Unemployed</option>
-        </select>
-        <input type="number" id="annual_income" name="annual_income" placeholder="Annual Income (Optional)" />
-        <textarea id="message" name="message" placeholder="Additional Message (Optional)"></textarea>
-        <button type="submit">Submit Loan Application</button>
+
+<div class="container">
+    <h2>Loan Application Form</h2>
+    <form id="loanForm">
+        <input type="text" id="name" placeholder="Full Name" required>
+        <input type="text" id="phone" placeholder="Phone Number" required>
+        <input type="text" id="id_number" placeholder="ID Number" required>
+        <input type="email" id="email" placeholder="Email Address" required>
+        <input type="number" id="loan_amount" placeholder="Loan Amount (KES)" required>
+        <textarea id="message" placeholder="Your Message (Optional)"></textarea>
+        <button type="submit">Submit Application</button>
     </form>
+</div>
 
-    <script type="text/javascript">
-        // Submit form to EmailJS when the user submits the form
-        document.getElementById("loan-form").addEventListener("submit", function(event){
-            event.preventDefault();  // Prevent the default form submission
-            
-            const formData = {
-                name: document.getElementById("name").value,
-                email: document.getElementById("email").value,
-                phone: document.getElementById("phone").value,
-                id_number: document.getElementById("id_number").value,
-                loan_type: document.getElementById("loan_type").value,
-                loan_amount: document.getElementById("loan_amount").value,
-                loan_term: document.getElementById("loan_term").value,
-                loan_purpose: document.getElementById("loan_purpose").value,
-                employment_status: document.getElementById("employment_status").value,
-                annual_income: document.getElementById("annual_income").value,
-                message: document.getElementById("message").value
-            };
+<!-- EmailJS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+    // Initialize EmailJS
+    (function() {
+        emailjs.init("0ockMZ07aVnggqzsD"); // Your Public Key
+    })();
 
-            // Send form data via EmailJS
-            emailjs.send("service_g5v9kbm", "template_i72ecc5", formData)
-                .then(function(response) {
-                    console.log('SUCCESS!', response);
-                    // Redirect to thank_you.html after successful submission
-                    window.location.href = "thank_you.html";  // Redirect to the thank you page
-                }, function(error) {
-                    console.log('FAILED...', error);
-                    alert('Failed to submit the application. Please try again later.');
-                });
+    // Form Submission
+    document.getElementById("loanForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        // Send the form data to EmailJS
+        emailjs.send("service_g5v9kbm", "template_i72ecc5", {
+            name: document.getElementById("name").value,
+            phone: document.getElementById("phone").value,
+            id_number: document.getElementById("id_number").value,
+            email: document.getElementById("email").value,
+            loan_amount: document.getElementById("loan_amount").value,
+            message: document.getElementById("message").value,
+        })
+        .then(function(response) {
+            console.log("SUCCESS!", response.status, response.text);
+            window.location.href = "thank_you.html"; // Redirect on success
+        }, function(error) {
+            console.log("FAILED...", error);
+            alert("Failed to send application. Please try again.");
         });
-    </script>
+    });
+</script>
+
 </body>
 </html>
