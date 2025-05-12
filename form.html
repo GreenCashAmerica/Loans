@@ -38,7 +38,11 @@
         <!-- Real-Time Interest Calculation Result -->
         <div id="interestResult" class="text-green-400 font-semibold"></div>
 
-        <div id="feeBreakdown" class="text-sm text-gray-400"></div>
+        <!-- Fee Breakdown -->
+        <div id="feeBreakdown" class="text-gray-400 mt-4"></div>
+
+        <!-- Total Received Amount after MPESA Fee -->
+        <div id="totalReceived" class="text-green-400 font-semibold mt-4"></div>
 
         <textarea id="message" placeholder="Your Message (Optional)" class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-green-400"></textarea>
         
@@ -56,7 +60,7 @@
           </label>
         </div>
 
-        <button id="submitBtn" type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-xl transition duration-200" disabled>
+        <button type="submit" id="submitBtn" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-xl transition duration-200">
           Submit Application
         </button>
       </form>
@@ -70,45 +74,46 @@
       emailjs.init("0ockMZ07aVnggqzsD");
     })();
 
-    // Minimum and maximum loan limits
-    const minLoans = {
-      personal: 100,
-      emergency: 200,
-      business: 1000,
-    };
-    const maxLoans = {
-      personal: 20000,
-      emergency: 50000,
-      business: 100000,
-    };
+    document.getElementById("loanForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+      window.location.href = "thank_you.html"; // Redirect to thank you page after submission
+    });
 
     const loanInput = document.getElementById('loan_amount');
     const durationInput = document.getElementById('duration');
     const loanTypeInput = document.getElementById('loan_type');
     const resultDiv = document.getElementById('interestResult');
     const feeBreakdown = document.getElementById('feeBreakdown');
+    const totalReceivedDiv = document.getElementById('totalReceived'); // New field to show total received after MPESA fee
     const submitBtn = document.getElementById('submitBtn');
 
-    function validateLoanAmount() {
-      const loanAmount = parseFloat(loanInput.value);
-      const loanType = loanTypeInput.value;
-
-      if (loanAmount < minLoans[loanType]) {
-        submitBtn.disabled = true;
-        alert(`Minimum loan amount for ${loanType} is KES ${minLoans[loanType]}`);
-      } else if (loanAmount > maxLoans[loanType]) {
-        submitBtn.disabled = true;
-        alert(`Maximum loan amount for ${loanType} is KES ${maxLoans[loanType]}`);
-      } else {
-        submitBtn.disabled = false;
-      }
-    }
-
-    // Calculate Interest, MPESA Fee, and other charges
     function calculateInterest() {
       const amount = parseFloat(loanInput.value);
       const days = parseInt(durationInput.value);
       const loanType = loanTypeInput.value;
+
+      // Loan type minimum and maximum enforcement
+      let minAmount = 0;
+      let maxAmount = 0;
+      if (loanType === 'personal') {
+        minAmount = 1000; maxAmount = 20000;
+      } else if (loanType === 'emergency') {
+        minAmount = 2000; maxAmount = 50000;
+      } else if (loanType === 'business') {
+        minAmount = 5000; maxAmount = 100000;
+      }
+
+      // Disable submit button if loan amount doesn't meet the minimum or maximum limit
+      if (amount < minAmount || amount > maxAmount) {
+        submitBtn.disabled = true;
+      } else {
+        submitBtn.disabled = false;
+      }
+
+      // Display modal with message if loan amount is outside the valid range
+      if (amount < minAmount || amount > maxAmount) {
+        alert(`Minimum loan for ${loanType} is KES ${minAmount}, and maximum is KES ${maxAmount}.`);
+      }
 
       if (!isNaN(amount) && !isNaN(days) && loanType) {
         let interestRate = 0;
@@ -122,8 +127,11 @@
         const mpesaFee = amount <= 1000 ? 30 : amount <= 2500 ? 49 : amount <= 5000 ? 67 : 84;
 
         const total = amount + interest + excise + facilitation + mpesaFee;
+        const totalReceived = total - mpesaFee; // Calculate the amount user will receive after MPESA fee
 
         resultDiv.textContent = `Total to repay after ${days} days: KES ${total.toFixed(2)}`;
+        totalReceivedDiv.textContent = `Amount you will receive after MPESA Fee: KES ${totalReceived.toFixed(2)}`; // Display total amount received
+
         feeBreakdown.innerHTML = `
           <p>Loan Amount: KES ${amount.toFixed(2)}</p>
           <p>Interest (${(interestRate * 100).toFixed(0)}%): KES ${interest.toFixed(2)}</p>
@@ -134,34 +142,14 @@
       } else {
         resultDiv.textContent = '';
         feeBreakdown.innerHTML = '';
+        totalReceivedDiv.textContent = ''; // Clear the total received amount if inputs are invalid
       }
     }
 
-    loanInput.addEventListener('input', function() {
-      calculateInterest();
-      validateLoanAmount();
-    });
+    loanInput.addEventListener('input', calculateInterest);
     durationInput.addEventListener('change', calculateInterest);
-    loanTypeInput.addEventListener('change', function() {
-      calculateInterest();
-      validateLoanAmount();
-    });
-
-    document.getElementById("loanForm").addEventListener("submit", function(event) {
-      event.preventDefault();
-      emailjs.send("service_g5v9kbm", "template_i72ecc5", {
-        name: document.getElementById("name").value,
-        phone: document.getElementById("phone").value,
-        id_number: document.getElementById("id_number").value,
-        email: document.getElementById("email").value,
-        loan_amount: document.getElementById("loan_amount").value,
-        loan_type: document.getElementById("loan_type").value,
-        duration: document.getElementById("duration").value,
-        message: document.getElementById("message").value
-      }).then(function(response) {
-        window.location.href = "thank_you.html";
-      });
-    });
+    loanTypeInput.addEventListener('change', calculateInterest);
   </script>
+
 </body>
 </html>
