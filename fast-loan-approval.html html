@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fast Loan Approval - NOVA PRME</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#1a1a2e] text-white font-sans min-h-screen flex flex-col justify-between">
+
+  <!-- Header -->
+  <header class="w-full px-6 py-4 bg-[#1a1a2e] shadow-md">
+    <h1 class="text-2xl font-bold text-green-400">NOVA PRME</h1>
+  </header>
+
+  <!-- Main Content -->
+  <main class="px-6 py-10 max-w-3xl mx-auto">
+    <h2 class="text-3xl font-bold text-green-400 mb-4">Fast Loan Approval</h2>
+    <p class="text-gray-300 mb-4">
+      At NOVA PRME, we understand that financial emergencies can’t wait. That’s why our loan approval process is designed to be **fast, efficient, and user-friendly**.
+    </p>
+    <p class="text-gray-300 mb-4">
+      From the moment you submit your application, our team works around the clock to review and disburse your loan as quickly as possible — often within just **minutes to a few hours**.
+    </p>
+    <p class="text-gray-300 mb-4">
+      Whether it’s for school fees, business capital, or personal emergencies, you can trust us to deliver prompt service with **zero bureaucracy and maximum speed**.
+    </p>
+    <ul class="text-gray-300 list-disc ml-6 mb-4">
+      <li>No collateral needed for standard loan tiers</li>
+      <li>Paperless, digital-first process</li>
+      <li>Direct disbursement to your mobile money account</li>
+    </ul>
+    <p class="text-gray-300">
+      We prioritize your needs and time — that’s what makes us one of Kenya’s most **reliable microloan providers**.
+    </p>
+  </main>
+
+  <!-- Back to Home -->
+  <div class="w-full px-6 pb-6 mt-auto">
+    <a href="index.html" class="block bg-green-600 hover:bg-green-700 text-white font-semibold text-center py-3 rounded-xl transition duration-200">
+      Back to Home
+    </a>
+  </div>
+
+</body>
+</html>
