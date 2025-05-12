@@ -1,143 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loan Calculator</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f9;
-        }
-        .loan-calculator {
-            width: 80%;
-            max-width: 600px;
-            margin: 50px auto;
-            background-color: #fff;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
-        .input-field {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .loan-breakdown {
-            margin-top: 20px;
-            font-size: 1.1em;
-        }
-        .loan-breakdown p {
-            margin: 8px 0;
-        }
-        .loan-breakdown span {
-            font-weight: bold;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Loan Application Form</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <div class="loan-calculator">
-        <h2>Loan Calculator</h2>
-        <label for="loanAmount">Loan Amount (KES):</label>
-        <input type="number" id="loanAmount" placeholder="Enter Loan Amount" class="input-field">
+<body class="bg-[#1a1a2e] text-white font-sans antialiased">
 
-        <label for="loanType">Loan Type:</label>
-        <select id="loanType" class="input-field">
-            <option value="regular">Regular Loan</option>
-            <option value="business">Business Loan</option>
-            <option value="emergency">Emergency Loan</option>
+  <div class="w-full max-w-md md:max-w-2xl lg:max-w-3xl mx-auto mt-6 p-4">
+    <div class="bg-gray-800 rounded-2xl p-6 shadow-lg">
+      <h2 class="text-2xl font-bold text-center mb-4 text-green-400">Loan Application Form</h2>
+      
+      <form id="loanForm" class="space-y-4">
+        <input type="text" id="name" placeholder="Full Name" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-green-400">
+        <input type="text" id="phone" placeholder="Phone Number" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-green-400">
+        <input type="text" id="id_number" placeholder="ID Number" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-green-400">
+        <input type="email" id="email" placeholder="Email Address" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-green-400">
+        <input type="number" id="loan_amount" placeholder="Loan Amount (KES)" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-green-400">
+
+        <!-- Duration Selection -->
+        <select id="duration" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-green-400">
+          <option value="">Select Duration</option>
+          <option value="7">7 Days</option>
+          <option value="14">14 Days</option>
+          <option value="21">21 Days</option>
+          <option value="30">30 Days</option>
         </select>
 
-        <label for="loanDuration">Loan Duration (Days):</label>
-        <select id="loanDuration" class="input-field">
-            <option value="7">7 Days</option>
-            <option value="14">14 Days</option>
-            <option value="30">30 Days</option>
-            <option value="60">60 Days</option>
-            <option value="90">90 Days</option>
-        </select>
+        <!-- Interest Calculation Result -->
+        <div id="interestResult" class="text-green-400 font-semibold"></div>
 
-        <button id="calculateLoan">Calculate</button>
-
-        <div id="loanBreakdown" class="loan-breakdown">
-            <p><strong>Loan Amount:</strong> <span id="loanAmountDisplay">KES 0</span></p>
-            <p><strong>Interest:</strong> <span id="interestDisplay">KES 0</span></p>
-            <p><strong>Transaction Fee:</strong> <span id="transactionFeeDisplay">KES 0</span></p>
-            <p><strong>Late Fee:</strong> <span id="lateFeeDisplay">KES 0</span></p>
-            <p><strong>Total Repayment Amount:</strong> <span id="totalRepaymentDisplay">KES 0</span></p>
-            <p><strong>Amount User Receives:</strong> <span id="amountReceivedDisplay">KES 0</span></p>
-        </div>
+        <textarea id="message" placeholder="Your Message (Optional)" class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-green-400"></textarea>
+        
+        <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-xl transition duration-200">
+          Submit Application
+        </button>
+      </form>
     </div>
+  </div>
 
-    <script>
-        document.getElementById('calculateLoan').addEventListener('click', function() {
-            const loanAmount = parseFloat(document.getElementById('loanAmount').value);
-            const loanDuration = parseInt(document.getElementById('loanDuration').value);
-            const loanType = document.getElementById('loanType').value;
+  <!-- EmailJS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script>
+    (function() {
+      emailjs.init("0ockMZ07aVnggqzsD");
+    })();
 
-            // Define interest rates and durations for each loan type
-            let interestRate = 0;
-            let durationOptions = [7, 14, 30]; // Default options for Regular Loan
-            if (loanType === 'regular') {
-                interestRate = 0.15;  // 15% per annum for Regular Loan
-            } else if (loanType === 'business') {
-                interestRate = 0.20;  // 20% per annum for Business Loan
-                durationOptions = [14, 30, 60, 90]; // Extended durations for Business Loan
-            } else if (loanType === 'emergency') {
-                interestRate = 0.12;  // 12% per annum for Emergency Loan
-            }
+    document.getElementById("loanForm").addEventListener("submit", function(event) {
+      event.preventDefault();
 
-            // If loan duration is not valid for selected loan type, reset to default
-            if (!durationOptions.includes(loanDuration)) {
-                alert("Invalid loan duration for the selected loan type.");
-                return;
-            }
+      emailjs.send("service_g5v9kbm", "template_i72ecc5", {
+        name: document.getElementById("name").value,
+        phone: document.getElementById("phone").value,
+        id_number: document.getElementById("id_number").value,
+        email: document.getElementById("email").value,
+        loan_amount: document.getElementById("loan_amount").value,
+        duration: document.getElementById("duration").value,
+        message: document.getElementById("message").value,
+      }).then(function(response) {
+        console.log("SUCCESS!", response.status, response.text);
+        window.location.href = "thank_you.html";
+      }, function(error) {
+        console.log("FAILED...", error);
+        alert("Failed to send application. Please try again.");
+      });
+    });
 
-            // Calculate daily interest rate
-            const dailyInterestRate = interestRate / 365;
+    // Interest Calculator (20% flat per month, prorated)
+    const loanInput = document.getElementById('loan_amount');
+    const durationInput = document.getElementById('duration');
+    const resultDiv = document.getElementById('interestResult');
 
-            // Calculate interest for the loan
-            let interest = loanAmount * dailyInterestRate * loanDuration;
+    function calculateInterest() {
+      const amount = parseFloat(loanInput.value);
+      const days = parseInt(durationInput.value);
+      if (!isNaN(amount) && !isNaN(days)) {
+        const ratePerDay = 0.20 / 30; // 20% per 30 days
+        const interest = amount * ratePerDay * days;
+        const total = amount + interest;
+        resultDiv.textContent = `Total to repay after ${days} days: KES ${total.toFixed(2)}`;
+      } else {
+        resultDiv.textContent = '';
+      }
+    }
 
-            // Transaction Fee (e.g., Safaricom fee)
-            let transactionFee = (loanAmount <= 100) ? 0 : 15;  // Assuming fee is KES 15 for amounts above KES 100
-            let lateFee = 0;
+    loanInput.addEventListener('input', calculateInterest);
+    durationInput.addEventListener('change', calculateInterest);
+  </script>
 
-            // Calculate late fee based on overdue days
-            if (loanDuration > 7) {
-                lateFee = 20 + (loanDuration - 7) * 5;  // KES 5 per day after 7 days overdue
-            }
-
-            // Total repayment amount
-            let totalRepayment = loanAmount + interest + lateFee;
-
-            // Amount the user receives after transaction fee
-            let amountReceived = loanAmount - transactionFee;
-
-            // Display the results
-            document.getElementById('loanAmountDisplay').innerText = `KES ${loanAmount}`;
-            document.getElementById('interestDisplay').innerText = `KES ${interest.toFixed(2)}`;
-            document.getElementById('transactionFeeDisplay').innerText = `KES ${transactionFee}`;
-            document.getElementById('lateFeeDisplay').innerText = `KES ${lateFee}`;
-            document.getElementById('totalRepaymentDisplay').innerText = `KES ${totalRepayment.toFixed(2)}`;
-            document.getElementById('amountReceivedDisplay').innerText = `KES ${amountReceived.toFixed(2)}`;
-        });
-    </script>
 </body>
 </html>
