@@ -5,123 +5,62 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Loan Application Form</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    /* Custom font and spacing for the layout */
-    body {
-      font-family: 'Poppins', sans-serif;
-    }
-
-    .container {
-      max-width: 500px;
-      margin: 0 auto;
-    }
-
-    .button {
-      background-color: #2f855a;
-      padding: 14px;
-      font-size: 18px;
-      font-weight: bold;
-      color: white;
-      border-radius: 5px;
-      width: 100%;
-      text-align: center;
-      cursor: pointer;
-    }
-
-    .input-field, .select-field, .textarea {
-      background-color: #2d3748;
-      color: #cbd5e0;
-      padding: 12px;
-      border-radius: 8px;
-      width: 100%;
-      margin-bottom: 15px;
-    }
-
-    .input-field:focus, .select-field:focus, .textarea:focus {
-      border: 2px solid #38a169;
-      outline: none;
-    }
-
-    h2 {
-      font-size: 24px;
-      color: #38a169;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .loader {
-      display: none;
-      text-align: center;
-      margin-top: 10px;
-    }
-
-    .loader span {
-      display: block;
-      color: #38a169;
-    }
-
-    .loader div {
-      border: 4px solid #f0f0f0;
-      border-top: 4px solid #38a169;
-      border-radius: 50%;
-      width: 30px;
-      height: 30px;
-      margin: 20px auto;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    .result {
-      color: #38a169;
-      font-weight: bold;
-      margin-top: 20px;
-      padding: 10px;
-      background-color: #2d3748;
-      border-radius: 8px;
-    }
-  </style>
 </head>
-<body class="bg-gray-900 text-white font-sans">
+<body class="bg-[#1a1a2e] text-white font-sans antialiased">
 
-  <div class="container p-6">
-    <h2>Loan Application Form</h2>
-    <form id="loanForm">
-      <input type="text" id="name" placeholder="Full Name" class="input-field" required>
-      <input type="text" id="phone" placeholder="Phone Number" class="input-field" required>
-      <input type="text" id="id_number" placeholder="ID Number" class="input-field" required>
-      <input type="email" id="email" placeholder="Email Address" class="input-field" required>
-      <input type="number" id="loan_amount" placeholder="Loan Amount (KES)" class="input-field" required>
+  <div class="w-full max-w-md md:max-w-2xl lg:max-w-3xl mx-auto mt-6 p-4">
+    <div class="bg-gray-800 rounded-2xl p-6 shadow-lg">
+      <h2 class="text-2xl font-bold text-center mb-4 text-green-400">Loan Application Form</h2>
+      
+      <form id="loanForm" class="space-y-4">
+        <input type="text" id="name" placeholder="Full Name" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-green-400">
+        <input type="text" id="phone" placeholder="Phone Number" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-green-400">
+        <input type="text" id="id_number" placeholder="ID Number" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-green-400">
+        <input type="email" id="email" placeholder="Email Address" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-green-400">
+        <input type="number" id="loan_amount" placeholder="Loan Amount (KES)" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-green-400">
 
-      <select id="loan_type" class="select-field" required>
-        <option value="">Select Loan Type</option>
-        <option value="personal">Personal Loan</option>
-        <option value="emergency">Emergency Loan</option>
-        <option value="business">Business Loan</option>
-      </select>
+        <!-- Duration Selection -->
+        <select id="duration" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-green-400">
+          <option value="">Select Duration</option>
+          <option value="7">7 Days</option>
+          <option value="14">14 Days</option>
+        </select>
 
-      <select id="duration" class="select-field" required>
-        <option value="">Select Duration</option>
-        <option value="7">7 Days</option>
-        <option value="14">14 Days</option>
-      </select>
+        <!-- Interest Calculation Result -->
+        <div id="interestResult" class="text-green-400 font-semibold"></div>
 
-      <textarea id="message" placeholder="Your Message (Optional)" class="textarea"></textarea>
+        <textarea id="message" placeholder="Your Message (Optional)" class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-green-400"></textarea>
+        
+        <!-- Late Fee and Interest Guidelines -->
+        <div class="text-sm text-gray-400">
+          <p>Late fee is calculated per day after the 7th day of loan duration.</p>
+          <a href="#interestGuidelineModal" class="text-blue-400 hover:underline" onclick="openInterestGuideline()">Click Here to Learn How Interest is Calculated</a>
+        </div>
 
-      <button id="submitBtn" type="submit" class="button">
-        Submit Application
-      </button>
+        <!-- Terms and Conditions Agreement -->
+        <div class="flex items-center text-sm text-gray-400">
+          <input type="checkbox" id="termsAgree" required class="mr-2">
+          <label for="termsAgree">
+            I agree with <a href="terms_and_conditions.html" class="text-blue-400 hover:underline">Nova Prime's Terms and Conditions</a> as a financial institution.
+          </label>
+        </div>
 
-      <div id="loadingIndicator" class="loader">
-        <span>Submitting...</span>
-        <div></div>
-      </div>
+        <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-xl transition duration-200">
+          Submit Application
+        </button>
+      </form>
+    </div>
+  </div>
 
-      <div id="interestResult" class="result"></div>
-    </form>
+  <!-- Interest Guidelines Modal -->
+  <div id="interestGuidelineModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden justify-center items-center">
+    <div class="bg-gray-800 p-6 rounded-lg w-96">
+      <h3 class="text-xl font-semibold text-center text-green-400">Interest Guidelines and Calculations</h3>
+      <p class="mt-4 text-white">Learn how interest is calculated based on the loan amount, duration, and loan type.</p>
+      <p class="text-white mt-2">Interest for Personal Loans is 15% for 7 days and prorated for longer durations. Emergency Loans carry a 20% annual interest rate, while Business Loans carry a 25% annual interest rate.</p>
+      <p class="text-white mt-2">Late fees of KES 20 apply per day after the 7th day of the loan's duration.</p>
+      <button class="mt-4 w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 rounded-xl" onclick="closeInterestGuideline()">Close</button>
+    </div>
   </div>
 
   <!-- EmailJS SDK -->
@@ -134,74 +73,12 @@
     document.getElementById("loanForm").addEventListener("submit", function(event) {
       event.preventDefault();
 
-      // Custom Validation for Loan Amount
-      const loanAmount = document.getElementById("loan_amount").value;
-      if (loanAmount <= 0 || isNaN(loanAmount)) {
-        alert("Please enter a valid loan amount greater than 0.");
-        return;
-      }
-
-      // Show Loading Indicator
-      document.getElementById("submitBtn").disabled = true;
-      document.getElementById("loadingIndicator").style.display = "block";
-
-      // Calculate Interest and Late Fee
-      const amount = parseFloat(loanAmount);
-      const duration = parseInt(document.getElementById("duration").value);
-      const loanType = document.getElementById("loan_type").value;
-      let interest = 0;
-      let lateFee = 0;
-      let totalRepayment = 0;
-
-      if (loanType === "personal") {
-        if (duration === 7) {
-          interest = amount * 0.15; // 15% for 7 days
-          totalRepayment = amount + interest;
-        } else if (duration === 14) {
-          interest = amount * 0.30; // 30% for 14 days
-          totalRepayment = amount + interest;
-        }
-      } else if (loanType === "emergency") {
-        if (duration === 7) {
-          interest = amount * 0.20; // 20% for 7 days
-          totalRepayment = amount + interest;
-        } else if (duration === 14) {
-          interest = amount * 0.40; // 40% for 14 days
-          totalRepayment = amount + interest;
-        }
-      } else if (loanType === "business") {
-        if (duration === 7) {
-          interest = amount * 0.25; // 25% for 7 days
-          totalRepayment = amount + interest;
-        } else if (duration === 14) {
-          interest = amount * 0.50; // 50% for 14 days
-          totalRepayment = amount + interest;
-        }
-      }
-
-      if (duration > 7) lateFee = 20; // Late Fee after 7 days
-
-      const totalWithLateFee = totalRepayment + lateFee;
-      const resultText = `
-        Loan Type: ${loanType.charAt(0).toUpperCase() + loanType.slice(1)} Loan
-        Loan Amount: KES ${amount}
-        Interest for ${duration} Days: KES ${interest.toFixed(2)}
-        Total (Without Late Fee): KES ${totalRepayment.toFixed(2)}
-        ${lateFee > 0 ? `Late Fee (Added after 7 days): KES ${lateFee}` : ''}
-        Total (With Late Fee): KES ${totalWithLateFee.toFixed(2)}
-      `;
-
-      // Show result
-      document.getElementById('interestResult').textContent = resultText;
-
-      // Send the loan application data via email
       emailjs.send("service_g5v9kbm", "template_i72ecc5", {
         name: document.getElementById("name").value,
         phone: document.getElementById("phone").value,
         id_number: document.getElementById("id_number").value,
         email: document.getElementById("email").value,
         loan_amount: document.getElementById("loan_amount").value,
-        loan_type: loanType,
         duration: document.getElementById("duration").value,
         message: document.getElementById("message").value,
       }).then(function(response) {
@@ -210,68 +87,44 @@
       }, function(error) {
         console.log("FAILED...", error);
         alert("Failed to send application. Please try again.");
-        document.getElementById("submitBtn").disabled = false;
-        document.getElementById("loadingIndicator").style.display = "none";
       });
     });
 
-    // Interest Calculator (Updated)
+    // Interest Calculator (20% flat per month, prorated)
     const loanInput = document.getElementById('loan_amount');
     const durationInput = document.getElementById('duration');
-    const loanTypeInput = document.getElementById('loan_type');
     const resultDiv = document.getElementById('interestResult');
 
     function calculateInterest() {
       const amount = parseFloat(loanInput.value);
       const days = parseInt(durationInput.value);
-      const loanType = loanTypeInput.value;
-      let interest = 0;
-      let lateFee = 0;
-      let totalRepayment = 0;
+      if (!isNaN(amount) && !isNaN(days)) {
+        let interestRate = 0;
+        if (durationInput.value === '7') {
+          interestRate = 0.15; // 15% for 7 days
+        } else if (durationInput.value === '14') {
+          interestRate = 0.30; // 30% for 14 days (prorated 15% per 7 days)
+        }
 
-      if (loanType === "personal") {
-        if (days === 7) {
-          interest = amount * 0.15; // 15% for 7 days
-          totalRepayment = amount + interest;
-        } else if (days === 14) {
-          interest = amount * 0.30; // 30% for 14 days
-          totalRepayment = amount + interest;
-        }
-      } else if (loanType === "emergency") {
-        if (days === 7) {
-          interest = amount * 0.20; // 20% for 7 days
-          totalRepayment = amount + interest;
-        } else if (days === 14) {
-          interest = amount * 0.40; // 40% for 14 days
-          totalRepayment = amount + interest;
-        }
-      } else if (loanType === "business") {
-        if (days === 7) {
-          interest = amount * 0.25; // 25% for 7 days
-          totalRepayment = amount + interest;
-        } else if (days === 14) {
-          interest = amount * 0.50; // 50% for 14 days
-          totalRepayment = amount + interest;
-        }
+        const interest = amount * interestRate;
+        const total = amount + interest;
+        resultDiv.textContent = `Total to repay after ${days} days: KES ${total.toFixed(2)}`;
+      } else {
+        resultDiv.textContent = '';
       }
-
-      if (days > 7) lateFee = 20; // Late Fee after 7 days
-
-      const totalWithLateFee = totalRepayment + lateFee;
-
-      resultDiv.textContent = `
-        Loan Type: ${loanType.charAt(0).toUpperCase() + loanType.slice(1)} Loan
-        Loan Amount: KES ${amount}
-        Interest for ${days} Days: KES ${interest.toFixed(2)}
-        Total (Without Late Fee): KES ${totalRepayment.toFixed(2)}
-        ${lateFee > 0 ? `Late Fee (Added after 7 days): KES ${lateFee}` : ''}
-        Total (With Late Fee): KES ${totalWithLateFee.toFixed(2)}
-      `;
     }
 
     loanInput.addEventListener('input', calculateInterest);
     durationInput.addEventListener('change', calculateInterest);
-    loanTypeInput.addEventListener('change', calculateInterest);
+
+    function openInterestGuideline() {
+      document.getElementById('interestGuidelineModal').classList.remove('hidden');
+    }
+
+    function closeInterestGuideline() {
+      document.getElementById('interestGuidelineModal').classList.add('hidden');
+    }
   </script>
+
 </body>
 </html>
