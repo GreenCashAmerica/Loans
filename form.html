@@ -19,7 +19,6 @@
         <input type="email" id="email" placeholder="Email Address" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-green-400">
         <input type="number" id="loan_amount" placeholder="Loan Amount (KES)" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-green-400">
 
-        <!-- Loan Type Selection -->
         <select id="loan_type" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-green-400">
           <option value="">Select Loan Type</option>
           <option value="personal">Personal Loan</option>
@@ -27,7 +26,6 @@
           <option value="business">Business Loan</option>
         </select>
 
-        <!-- Duration Selection -->
         <select id="duration" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-green-400">
           <option value="">Select Duration</option>
           <option value="7">7 Days</option>
@@ -35,24 +33,17 @@
           <option value="30">30 Days</option>
         </select>
 
-        <!-- Real-Time Interest Calculation Result -->
         <div id="interestResult" class="text-green-400 font-semibold"></div>
-
-        <!-- Fee Breakdown -->
         <div id="feeBreakdown" class="text-gray-400 mt-4"></div>
-
-        <!-- Total Received Amount after MPESA Fee -->
         <div id="totalReceived" class="text-green-400 font-semibold mt-4"></div>
 
         <textarea id="message" placeholder="Your Message (Optional)" class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-green-400"></textarea>
-        
-        <!-- Late Fee and Interest Guidelines -->
+
         <div class="text-sm text-gray-400">
           <p>Late fee is calculated per day after the 7th day of loan duration.</p>
           <a href="interest_guidelines.html" class="text-blue-400 hover:underline">Click Here to Learn How Interest is Calculated</a>
         </div>
 
-        <!-- Terms and Conditions Agreement -->
         <div class="flex items-center text-sm text-gray-400">
           <input type="checkbox" id="termsAgree" required class="mr-2">
           <label for="termsAgree">
@@ -67,36 +58,11 @@
     </div>
   </div>
 
-  <!-- EmailJS SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script>
     (function() {
-      emailjs.init("0ockMZ07aVnggqzsD"); // Your public key
+      emailjs.init("0ockMZ07aVnggqzsD");
     })();
-
-    document.getElementById("loanForm").addEventListener("submit", function(event) {
-      event.preventDefault();
-
-      const params = {
-        name: document.getElementById("name").value,
-        phone: document.getElementById("phone").value,
-        id_number: document.getElementById("id_number").value,
-        email: document.getElementById("email").value,
-        loan_amount: document.getElementById("loan_amount").value,
-        loan_type: document.getElementById("loan_type").value,
-        duration: document.getElementById("duration").value,
-        message: document.getElementById("message").value,
-      };
-
-      emailjs.send("service_g5v9kbm", "template_i72ecc5", params)
-        .then(function(response) {
-          console.log("SUCCESS!", response.status, response.text);
-          window.location.href = "thank_you.html";
-        }, function(error) {
-          console.error("FAILED...", error);
-          alert("There was an error submitting the form. Please try again.");
-        });
-    });
 
     const loanInput = document.getElementById('loan_amount');
     const durationInput = document.getElementById('duration');
@@ -104,7 +70,6 @@
     const resultDiv = document.getElementById('interestResult');
     const feeBreakdown = document.getElementById('feeBreakdown');
     const totalReceivedDiv = document.getElementById('totalReceived');
-    const submitBtn = document.getElementById('submitBtn');
 
     function calculateInterest() {
       const amount = parseFloat(loanInput.value);
@@ -156,6 +121,51 @@
     loanInput.addEventListener('input', calculateInterest);
     durationInput.addEventListener('change', calculateInterest);
     loanTypeInput.addEventListener('change', calculateInterest);
+
+    document.getElementById("loanForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const phone = document.getElementById("phone").value;
+      const id_number = document.getElementById("id_number").value;
+      const email = document.getElementById("email").value;
+      const loan_amount = parseFloat(document.getElementById("loan_amount").value);
+      const loan_type = document.getElementById("loan_type").value;
+      const duration = parseInt(document.getElementById("duration").value);
+      const message = document.getElementById("message").value;
+
+      let interestRate = 0;
+      if (loan_type === 'personal') interestRate = 0.15;
+      else if (loan_type === 'emergency') interestRate = 0.20;
+      else if (loan_type === 'business') interestRate = 0.25;
+
+      const interest = loan_amount * interestRate * (duration / 365);
+      const excise = interest * 0.2;
+      const facilitation = 0.01 * loan_amount;
+      const mpesaFee = loan_amount <= 1000 ? 30 : loan_amount <= 2500 ? 49 : loan_amount <= 5000 ? 67 : 84;
+
+      const total_repay = (loan_amount + interest + excise + facilitation + mpesaFee).toFixed(2);
+      const total_received = (loan_amount - mpesaFee).toFixed(2);
+
+      emailjs.send("service_g5v9kbm", "template_i72ecc5", {
+        name,
+        phone,
+        id_number,
+        email,
+        loan_amount,
+        loan_type,
+        duration,
+        message,
+        total_repay,
+        total_received,
+      })
+      .then(function(response) {
+        console.log("SUCCESS!", response.status, response.text);
+        window.location.href = "thank_you.html";
+      }, function(error) {
+        console.log("FAILED...", error);
+      });
+    });
   </script>
 
 </body>
