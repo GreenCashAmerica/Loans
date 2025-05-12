@@ -15,6 +15,13 @@
     <div class="bg-gray-800 rounded-2xl p-6 shadow-lg">
       <h2 class="text-2xl font-bold text-center mb-4 text-green-400">Loan Application Form</h2>
       <form id="loanForm" class="space-y-4">
+        
+        <!-- Loan Type Dropdown -->
+        <select id="loanType" class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-green-400" onchange="updateInterestRate()">
+          <option value="personal" selected>Personal Loan</option>
+          <option value="business">Business Loan</option>
+        </select>
+        
         <input type="text" id="name" placeholder="Full Name" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-green-400">
         
         <input type="text" id="phone" placeholder="Phone Number" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-green-400">
@@ -64,13 +71,28 @@
       });
     });
 
+    // Default Interest Rates
+    const interestRates = {
+      personal: 0.15,  // 15% per annum for personal loans
+      business: 0.18   // 18% per annum for business loans
+    };
+
+    // Update interest rate based on loan type selection
+    function updateInterestRate() {
+      const loanType = document.getElementById("loanType").value;
+      calculateInterest();
+    }
+
     // Interest Calculation Function
     function calculateInterest() {
       const loanAmount = parseFloat(document.getElementById("loan_amount").value) || 0;
       const loanPeriod = parseFloat(document.getElementById("loan_period").value) || 0;
-      
-      // Assuming 10% annual interest
-      const annualInterestRate = 0.10;
+      const loanType = document.getElementById("loanType").value;
+
+      // Get the appropriate interest rate
+      const annualInterestRate = interestRates[loanType];
+
+      // Calculate interest (Assuming compound interest for simplicity: Loan Amount * Interest Rate * Time in Years)
       const interestAmount = loanAmount * annualInterestRate * (loanPeriod / 12); // Interest = Principal x Rate x Time (in years)
       const totalRepayment = loanAmount + interestAmount;
 
