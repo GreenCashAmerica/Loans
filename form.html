@@ -76,7 +76,7 @@
 
     document.getElementById("loanForm").addEventListener("submit", function(event) {
       event.preventDefault();
-      window.location.href = "thank_you.html"; // Redirect to thank you page after submission
+      window.location.href = "thank_you.html";
     });
 
     const loanInput = document.getElementById('loan_amount');
@@ -84,7 +84,7 @@
     const loanTypeInput = document.getElementById('loan_type');
     const resultDiv = document.getElementById('interestResult');
     const feeBreakdown = document.getElementById('feeBreakdown');
-    const totalReceivedDiv = document.getElementById('totalReceived'); // New field to show total received after MPESA fee
+    const totalReceivedDiv = document.getElementById('totalReceived');
     const submitBtn = document.getElementById('submitBtn');
 
     function calculateInterest() {
@@ -92,27 +92,16 @@
       const days = parseInt(durationInput.value);
       const loanType = loanTypeInput.value;
 
-      // Loan type minimum and maximum enforcement
-      let minAmount = 0;
-      let maxAmount = 0;
+      // Set minimum and maximum directly in input based on loan type
       if (loanType === 'personal') {
-        minAmount = 1000; maxAmount = 20000;
+        loanInput.min = 1000;
+        loanInput.max = 20000;
       } else if (loanType === 'emergency') {
-        minAmount = 2000; maxAmount = 50000;
+        loanInput.min = 2000;
+        loanInput.max = 50000;
       } else if (loanType === 'business') {
-        minAmount = 5000; maxAmount = 100000;
-      }
-
-      // Disable submit button if loan amount doesn't meet the minimum or maximum limit
-      if (amount < minAmount || amount > maxAmount) {
-        submitBtn.disabled = true;
-      } else {
-        submitBtn.disabled = false;
-      }
-
-      // Display modal with message if loan amount is outside the valid range
-      if (amount < minAmount || amount > maxAmount) {
-        alert(`Minimum loan for ${loanType} is KES ${minAmount}, and maximum is KES ${maxAmount}.`);
+        loanInput.min = 5000;
+        loanInput.max = 100000;
       }
 
       if (!isNaN(amount) && !isNaN(days) && loanType) {
@@ -126,11 +115,11 @@
         const facilitation = 0.01 * amount;
         const mpesaFee = amount <= 1000 ? 30 : amount <= 2500 ? 49 : amount <= 5000 ? 67 : 84;
 
-        const total = amount + interest + excise + facilitation + mpesaFee;
-        const totalReceived = total - mpesaFee; // Calculate the amount user will receive after MPESA fee
+        const totalRepay = amount + interest + excise + facilitation + mpesaFee;
+        const totalReceived = amount - mpesaFee; // Changed here
 
-        resultDiv.textContent = `Total to repay after ${days} days: KES ${total.toFixed(2)}`;
-        totalReceivedDiv.textContent = `Amount you will receive after MPESA Fee: KES ${totalReceived.toFixed(2)}`; // Display total amount received
+        resultDiv.textContent = `Total to repay after ${days} days: KES ${totalRepay.toFixed(2)}`;
+        totalReceivedDiv.textContent = `Amount you will receive after MPESA Fee: KES ${totalReceived.toFixed(2)}`;
 
         feeBreakdown.innerHTML = `
           <p>Loan Amount: KES ${amount.toFixed(2)}</p>
@@ -142,7 +131,7 @@
       } else {
         resultDiv.textContent = '';
         feeBreakdown.innerHTML = '';
-        totalReceivedDiv.textContent = ''; // Clear the total received amount if inputs are invalid
+        totalReceivedDiv.textContent = '';
       }
     }
 
