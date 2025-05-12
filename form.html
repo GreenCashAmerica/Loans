@@ -3,30 +3,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Nova Prime Loan Application</title>
+  <title>Loan Application Form</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-[#1a1a2e] text-white font-sans antialiased">
 
-  <div class="w-full max-w-2xl mx-auto mt-6 p-4">
+  <div class="w-full max-w-md md:max-w-2xl lg:max-w-3xl mx-auto mt-6 p-4">
     <div class="bg-gray-800 rounded-2xl p-6 shadow-lg">
       <h2 class="text-2xl font-bold text-center mb-4 text-green-400">Loan Application Form</h2>
       
       <form id="loanForm" class="space-y-4">
-        <input type="text" id="name" placeholder="Full Name" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:ring-2 focus:ring-green-400">
-        <input type="text" id="phone" placeholder="Phone Number" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:ring-2 focus:ring-green-400">
-        <input type="text" id="id_number" placeholder="ID Number" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:ring-2 focus:ring-green-400">
-        <input type="email" id="email" placeholder="Email Address" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:ring-2 focus:ring-green-400">
-        <input type="number" id="loan_amount" placeholder="Loan Amount (KES)" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:ring-2 focus:ring-green-400">
+        <input type="text" id="name" placeholder="Full Name" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-green-400">
+        <input type="text" id="phone" placeholder="Phone Number" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-green-400">
+        <input type="text" id="id_number" placeholder="ID Number" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-green-400">
+        <input type="email" id="email" placeholder="Email Address" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-green-400">
+        <input type="number" id="loan_amount" placeholder="Loan Amount (KES)" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-green-400">
 
-        <select id="loan_type" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white focus:ring-2 focus:ring-green-400">
+        <select id="loan_type" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-green-400">
           <option value="">Select Loan Type</option>
           <option value="personal">Personal Loan</option>
           <option value="emergency">Emergency Loan</option>
           <option value="business">Business Loan</option>
         </select>
 
-        <select id="duration" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white focus:ring-2 focus:ring-green-400">
+        <select id="duration" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-green-400">
           <option value="">Select Duration</option>
           <option value="7">7 Days</option>
           <option value="14">14 Days</option>
@@ -34,10 +34,9 @@
         </select>
 
         <div id="interestResult" class="text-green-400 font-semibold"></div>
-        <div id="feeBreakdown" class="text-sm text-gray-300"></div>
 
-        <textarea id="message" placeholder="Your Message (Optional)" class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:ring-2 focus:ring-green-400"></textarea>
-
+        <textarea id="message" placeholder="Your Message (Optional)" class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-green-400"></textarea>
+        
         <div class="text-sm text-gray-400">
           <p>Late fee is calculated per day after the 7th day of loan duration.</p>
           <a href="interest_guidelines.html" class="text-blue-400 hover:underline">Click Here to Learn How Interest is Calculated</a>
@@ -46,31 +45,123 @@
         <div class="flex items-center text-sm text-gray-400">
           <input type="checkbox" id="termsAgree" required class="mr-2">
           <label for="termsAgree">
-            I agree with <a href="terms_and_conditions.html" class="text-blue-400 hover:underline">Nova Prime's Terms and Conditions</a>.
+            I agree with <a href="terms_and_conditions.html" class="text-blue-400 hover:underline">Nova Prime's Terms and Conditions</a> as a financial institution.
           </label>
         </div>
 
-        <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-xl transition duration-200">
+        <button id="submitBtn" type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-xl transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
           Submit Application
         </button>
       </form>
     </div>
   </div>
 
+  <!-- Modal -->
+  <div id="limitModal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50">
+    <div class="bg-gray-900 rounded-xl p-6 shadow-xl text-center max-w-md w-full">
+      <h3 class="text-lg font-semibold text-red-400 mb-2">Loan Limit Notice</h3>
+      <p id="modalMessage" class="text-gray-300 mb-4"></p>
+      <button onclick="document.getElementById('limitModal').classList.add('hidden')" class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-md text-white">
+        Close
+      </button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script>
-    document.getElementById("loanForm").addEventListener("submit", function(event) {
-      event.preventDefault();
-      alert("Application submitted! You'll be redirected.");
+    (function() {
+      emailjs.init("0ockMZ07aVnggqzsD");
+    })();
+
+    const loanForm = document.getElementById("loanForm");
+    const submitBtn = document.getElementById("submitBtn");
+    const loanAmountInput = document.getElementById("loan_amount");
+    const loanTypeInput = document.getElementById("loan_type");
+    const modal = document.getElementById("limitModal");
+    const modalMsg = document.getElementById("modalMessage");
+
+    const minLoans = {
+      personal: 100,
+      emergency: 200,
+      business: 1000
+    };
+
+    const maxLoans = {
+      personal: 20000,
+      emergency: 50000,
+      business: 100000
+    };
+
+    function validateAmount() {
+      const type = loanTypeInput.value;
+      const amount = parseFloat(loanAmountInput.value);
+
+      if (!type || isNaN(amount)) {
+        submitBtn.disabled = true;
+        return;
+      }
+
+      const min = minLoans[type];
+      const max = maxLoans[type];
+
+      if (amount < min || amount > max) {
+        submitBtn.disabled = false;
+        return false;
+      }
+
+      submitBtn.disabled = false;
+      return true;
+    }
+
+    loanTypeInput.addEventListener("change", validateAmount);
+    loanAmountInput.addEventListener("input", validateAmount);
+
+    loanForm.addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const type = loanTypeInput.value;
+      const amount = parseFloat(loanAmountInput.value);
+      const min = minLoans[type];
+      const max = maxLoans[type];
+
+      if (amount < min || amount > max) {
+        modalMsg.textContent = `For ${type} loan, amount must be between KES ${min.toLocaleString()} and KES ${max.toLocaleString()}.`;
+        modal.classList.remove("hidden");
+        return;
+      }
+
+      emailjs.send("service_g5v9kbm", "template_i72ecc5", {
+        name: document.getElementById("name").value,
+        phone: document.getElementById("phone").value,
+        id_number: document.getElementById("id_number").value,
+        email: document.getElementById("email").value,
+        loan_amount: amount,
+        loan_type: type,
+        duration: document.getElementById("duration").value,
+        message: document.getElementById("message").value,
+      }).then(function() {
+        window.location.href = "thank_you.html";
+      });
     });
 
-    const loanInput = document.getElementById('loan_amount');
     const durationInput = document.getElementById('duration');
-    const loanTypeInput = document.getElementById('loan_type');
     const resultDiv = document.getElementById('interestResult');
-    const feeBreakdown = document.getElementById('feeBreakdown');
+
+    function calculateTransactionFee(amount) {
+      if (amount <= 100) return 0;
+      if (amount <= 500) return 10;
+      if (amount <= 1000) return 12;
+      if (amount <= 1500) return 14;
+      if (amount <= 2500) return 23;
+      if (amount <= 3500) return 33;
+      if (amount <= 5000) return 43;
+      if (amount <= 7500) return 55;
+      if (amount <= 20000) return 65;
+      return 67;
+    }
 
     function calculateInterest() {
-      const amount = parseFloat(loanInput.value);
+      const amount = parseFloat(loanAmountInput.value);
       const days = parseInt(durationInput.value);
       const loanType = loanTypeInput.value;
 
@@ -81,27 +172,23 @@
         else if (loanType === 'business') interestRate = 0.25;
 
         const interest = amount * interestRate * (days / 365);
-        const excise = interest * 0.2;
-        const facilitation = 0.01 * amount;
-        const mpesaFee = amount <= 1000 ? 30 : amount <= 2500 ? 49 : amount <= 5000 ? 67 : 84;
+        const totalRepay = amount + interest;
 
-        const total = amount + interest + excise + facilitation + mpesaFee;
+        const transactionFee = calculateTransactionFee(amount);
+        const facilitationFee = 0.075 * amount;
+        const exciseDuty = 0.20 * facilitationFee;
+        const netReceived = amount - transactionFee - facilitationFee - exciseDuty;
 
-        resultDiv.textContent = `Total to repay after ${days} days: KES ${total.toFixed(2)}`;
-        feeBreakdown.innerHTML = `
-          <p>Loan Amount: KES ${amount.toFixed(2)}</p>
-          <p>Interest (${(interestRate * 100).toFixed(0)}%): KES ${interest.toFixed(2)}</p>
-          <p>Excise Duty (20% of Interest): KES ${excise.toFixed(2)}</p>
-          <p>Facilitation Fee (1%): KES ${facilitation.toFixed(2)}</p>
-          <p>MPESA Transaction Fee: KES ${mpesaFee.toFixed(2)}</p>
+        resultDiv.innerHTML = `
+          <p>Total to repay after ${days} days: <span class="text-white">KES ${totalRepay.toFixed(2)}</span></p>
+          <p>Amount you will receive: <span class="text-white">KES ${netReceived.toFixed(2)}</span></p>
         `;
       } else {
         resultDiv.textContent = '';
-        feeBreakdown.innerHTML = '';
       }
     }
 
-    loanInput.addEventListener('input', calculateInterest);
+    loanAmountInput.addEventListener('input', calculateInterest);
     durationInput.addEventListener('change', calculateInterest);
     loanTypeInput.addEventListener('change', calculateInterest);
   </script>
