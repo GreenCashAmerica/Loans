@@ -3,20 +3,35 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>NOVA PRME - Home</title>
+  <title>NOVA PRIME - Home</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .spinner {
+      border: 4px solid #f3f3f3; 
+      border-top: 4px solid #48bb78; /* Green color to match your theme */
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
 </head>
 <body class="bg-[#1a1a2e] text-white font-sans antialiased min-h-screen flex flex-col justify-between">
 
   <!-- Header -->
   <header class="w-full px-6 py-4 bg-[#1a1a2e] flex items-center shadow-md">
-    <h1 class="text-2xl font-bold text-green-400">NOVA PRME</h1>
+    <h1 class="text-2xl font-bold text-green-400">NOVA PRIME</h1>
   </header>
 
   <!-- Hero / Intro Section -->
   <section class="flex flex-col items-center justify-center text-center px-6 py-12 mx-4 bg-gray-800 rounded-2xl">
     <h2 class="text-3xl font-bold mb-4">Reliable Loans, When You Need Them</h2>
-    <p class="text-gray-300 max-w-md">NOVA PRME is your trusted financial partner offering fast, secure, and flexible loans tailored to your needs — anytime, anywhere.</p>
+    <p class="text-gray-300 max-w-md">NOVA PRIME is your trusted financial partner offering fast, secure, and flexible loans tailored to your needs — anytime, anywhere.</p>
   </section>
 
   <!-- Highlights -->
@@ -49,10 +64,29 @@
 
   <!-- Apply Today Button -->
   <div class="w-full px-6 pb-6 mt-auto">
-    <a href="form.html" class="block bg-green-600 hover:bg-green-700 text-white font-semibold text-center py-3 rounded-xl transition duration-200">
+    <button onclick="showSpinner()" class="block bg-green-600 hover:bg-green-700 text-white font-semibold text-center py-3 rounded-xl transition duration-200">
       Apply Today
-    </a>
+    </button>
   </div>
+
+  <!-- Spinner Overlay (Initially hidden) -->
+  <div id="spinner-overlay" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden">
+    <div class="spinner"></div>
+  </div>
+
+  <script>
+    // Function to show the spinner and delay the page redirect
+    function showSpinner() {
+      // Show the spinner overlay
+      document.getElementById('spinner-overlay').classList.remove('hidden');
+      
+      // Set a delay of 2 seconds before redirecting
+      setTimeout(function() {
+        // Redirect to the loan application page
+        window.location.href = 'form.html';
+      }, 2000);
+    }
+  </script>
 
 </body>
 </html>
