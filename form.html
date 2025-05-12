@@ -1,93 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Loan Application Form</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Calculator</title>
+    <style>
+        /* Preserving original layout */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            padding: 20px;
+        }
+
+        .loan-calculator {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .loan-breakdown {
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .loan-breakdown p {
+            margin: 5px 0;
+        }
+
+        .loan-breakdown strong {
+            font-weight: bold;
+        }
+    </style>
 </head>
-<body class="bg-[#1a1a2e] text-white font-sans antialiased">
+<body>
 
-  <div class="w-full max-w-md md:max-w-2xl lg:max-w-3xl mx-auto mt-6 p-4">
-    <div class="bg-gray-800 rounded-2xl p-6 shadow-lg">
-      <h2 class="text-2xl font-bold text-center mb-4 text-green-400">Loan Application Form</h2>
-      
-      <form id="loanForm" class="space-y-4">
-        <input type="text" id="name" placeholder="Full Name" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-green-400">
-        <input type="text" id="phone" placeholder="Phone Number" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-green-400">
-        <input type="text" id="id_number" placeholder="ID Number" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-green-400">
-        <input type="email" id="email" placeholder="Email Address" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-green-400">
-        <input type="number" id="loan_amount" placeholder="Loan Amount (KES)" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-green-400">
+    <div class="loan-calculator">
+        <h1>Loan Calculator</h1>
 
-        <!-- Duration Selection -->
-        <select id="duration" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-green-400">
-          <option value="">Select Duration</option>
-          <option value="7">7 Days</option>
-          <option value="14">14 Days</option>
-          <option value="21">21 Days</option>
-          <option value="30">30 Days</option>
+        <label for="loanAmount">Loan Amount (KES):</label>
+        <input type="number" id="loanAmount" placeholder="Enter Loan Amount" class="input-field">
+
+        <label for="loanDuration">Loan Duration (Days):</label>
+        <select id="loanDuration" class="input-field">
+            <option value="7">7 Days</option>
+            <option value="14">14 Days</option>
+            <option value="30">30 Days</option>
         </select>
 
-        <!-- Interest Calculation Result -->
-        <div id="interestResult" class="text-green-400 font-semibold"></div>
+        <button id="calculateLoan">Calculate</button>
 
-        <textarea id="message" placeholder="Your Message (Optional)" class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-green-400"></textarea>
-        
-        <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-xl transition duration-200">
-          Submit Application
-        </button>
-      </form>
+        <div id="loanBreakdown" class="loan-breakdown">
+            <p><strong>Loan Amount:</strong> <span id="loanAmountDisplay">KES 0</span></p>
+            <p><strong>Interest:</strong> <span id="interestDisplay">KES 0</span></p>
+            <p><strong>Transaction Fee:</strong> <span id="transactionFeeDisplay">KES 0</span></p>
+            <p><strong>Late Fee:</strong> <span id="lateFeeDisplay">KES 0</span></p>
+            <p><strong>Total Repayment Amount:</strong> <span id="totalRepaymentDisplay">KES 0</span></p>
+            <p><strong>Amount User Receives:</strong> <span id="amountReceivedDisplay">KES 0</span></p>
+        </div>
     </div>
-  </div>
 
-  <!-- EmailJS SDK -->
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-  <script>
-    (function() {
-      emailjs.init("0ockMZ07aVnggqzsD");
-    })();
+    <script>
+        document.getElementById('calculateLoan').addEventListener('click', function() {
+            const loanAmount = parseFloat(document.getElementById('loanAmount').value);
+            const loanDuration = parseInt(document.getElementById('loanDuration').value);
 
-    document.getElementById("loanForm").addEventListener("submit", function(event) {
-      event.preventDefault();
+            const interestRate = 0.15;  // 15% for 7 days
+            let interest = loanAmount * interestRate;
+            let transactionFee = (loanAmount <= 100) ? 0 : 15;  // Safaricom transaction fee for amounts > KES 100
+            let lateFee = 0;
 
-      emailjs.send("service_g5v9kbm", "template_i72ecc5", {
-        name: document.getElementById("name").value,
-        phone: document.getElementById("phone").value,
-        id_number: document.getElementById("id_number").value,
-        email: document.getElementById("email").value,
-        loan_amount: document.getElementById("loan_amount").value,
-        duration: document.getElementById("duration").value,
-        message: document.getElementById("message").value,
-      }).then(function(response) {
-        console.log("SUCCESS!", response.status, response.text);
-        window.location.href = "thank_you.html";
-      }, function(error) {
-        console.log("FAILED...", error);
-        alert("Failed to send application. Please try again.");
-      });
-    });
+            // Calculate late fee based on loan duration
+            if (loanDuration === 7) {
+                lateFee = 0;  // No late fee if paid within 7 days
+            } else if (loanDuration === 14) {
+                if (loanDuration > 7) {
+                    lateFee = 20 + (loanDuration - 7) * 5;  // Late fee for days after day 7
+                }
+            } else if (loanDuration === 30) {
+                if (loanDuration > 7) {
+                    lateFee = 20 + (loanDuration - 7) * 5;  // Late fee for days after day 7
+                }
+            }
 
-    // Interest Calculator (20% flat per month, prorated)
-    const loanInput = document.getElementById('loan_amount');
-    const durationInput = document.getElementById('duration');
-    const resultDiv = document.getElementById('interestResult');
+            // Total repayment amount
+            let totalRepayment = loanAmount + interest + lateFee;
 
-    function calculateInterest() {
-      const amount = parseFloat(loanInput.value);
-      const days = parseInt(durationInput.value);
-      if (!isNaN(amount) && !isNaN(days)) {
-        const ratePerDay = 0.20 / 30; // 20% per 30 days
-        const interest = amount * ratePerDay * days;
-        const total = amount + interest;
-        resultDiv.textContent = `Total to repay after ${days} days: KES ${total.toFixed(2)}`;
-      } else {
-        resultDiv.textContent = '';
-      }
-    }
+            // Amount the user receives after Safaricom transaction fee
+            let amountReceived = loanAmount - transactionFee;
 
-    loanInput.addEventListener('input', calculateInterest);
-    durationInput.addEventListener('change', calculateInterest);
-  </script>
+            // Display the results
+            document.getElementById('loanAmountDisplay').innerText = `KES ${loanAmount}`;
+            document.getElementById('interestDisplay').innerText = `KES ${interest}`;
+            document.getElementById('transactionFeeDisplay').innerText = `KES ${transactionFee}`;
+            document.getElementById('lateFeeDisplay').innerText = `KES ${lateFee}`;
+            document.getElementById('totalRepaymentDisplay').innerText = `KES ${totalRepayment}`;
+            document.getElementById('amountReceivedDisplay').innerText = `KES ${amountReceived}`;
+        });
+    </script>
 
 </body>
 </html>
