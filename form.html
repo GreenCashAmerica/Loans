@@ -71,12 +71,31 @@
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script>
     (function() {
-      emailjs.init("0ockMZ07aVnggqzsD");
+      emailjs.init("0ockMZ07aVnggqzsD"); // Your public key
     })();
 
     document.getElementById("loanForm").addEventListener("submit", function(event) {
       event.preventDefault();
-      window.location.href = "thank_you.html";
+
+      const params = {
+        name: document.getElementById("name").value,
+        phone: document.getElementById("phone").value,
+        id_number: document.getElementById("id_number").value,
+        email: document.getElementById("email").value,
+        loan_amount: document.getElementById("loan_amount").value,
+        loan_type: document.getElementById("loan_type").value,
+        duration: document.getElementById("duration").value,
+        message: document.getElementById("message").value,
+      };
+
+      emailjs.send("service_g5v9kbm", "template_i72ecc5", params)
+        .then(function(response) {
+          console.log("SUCCESS!", response.status, response.text);
+          window.location.href = "thank_you.html";
+        }, function(error) {
+          console.error("FAILED...", error);
+          alert("There was an error submitting the form. Please try again.");
+        });
     });
 
     const loanInput = document.getElementById('loan_amount');
@@ -92,7 +111,6 @@
       const days = parseInt(durationInput.value);
       const loanType = loanTypeInput.value;
 
-      // Set minimum and maximum directly in input based on loan type
       if (loanType === 'personal') {
         loanInput.min = 1000;
         loanInput.max = 20000;
@@ -116,7 +134,7 @@
         const mpesaFee = amount <= 1000 ? 30 : amount <= 2500 ? 49 : amount <= 5000 ? 67 : 84;
 
         const totalRepay = amount + interest + excise + facilitation + mpesaFee;
-        const totalReceived = amount - mpesaFee; // Changed here
+        const totalReceived = amount - mpesaFee;
 
         resultDiv.textContent = `Total to repay after ${days} days: KES ${totalRepay.toFixed(2)}`;
         totalReceivedDiv.textContent = `Amount you will receive after MPESA Fee: KES ${totalReceived.toFixed(2)}`;
